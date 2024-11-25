@@ -1,5 +1,5 @@
 window.onload = () => {
-    // Crear tarjetas al cargar la página
+    // Crear tarjetas iniciales
     crearTarjetas(filosofos);
 
     // Asociar eventos al formulario de creación
@@ -10,12 +10,22 @@ window.onload = () => {
 
     // Asociar eventos a los botones de ordenación
     let botonOrdenAZ = document.querySelector('.sort-az');
-    let botonOrdenZA = document.querySelector('.sort-za');    
+    let botonOrdenZA = document.querySelector('.sort-za');
     if (botonOrdenAZ) {
         botonOrdenAZ.addEventListener('click', ordenarNombreAZ);
     }
     if (botonOrdenZA) {
         botonOrdenZA.addEventListener('click', ordenarNombreZA);
+    }
+
+    // Asociar eventos a los botones de Guardar y Cargar Tarjetas
+    let botonGuardarTarjetas = document.querySelector('.save-btn');
+    let botonCargarTarjetas = document.querySelector('.load-btn');
+    if (botonGuardarTarjetas) {
+        botonGuardarTarjetas.addEventListener('click', guardarTarjetas);
+    }
+    if (botonCargarTarjetas) {
+        botonCargarTarjetas.addEventListener('click', cargarTarjetas);
     }
 };
 
@@ -213,32 +223,71 @@ function crearNuevaTarjeta(event) {
     document.querySelector('.create-card-form form').reset();
 }
 
-function parsearTarjetas(tarjetas){
+function parsearTarjetas(tarjetas) {
     let filosofosParseados = [];
-    for (let tarjeta of tarjetas){
+    for (let tarjeta of tarjetas) {
         let filosofo = {};
+
+        // Extraer información básica del filósofo
         filosofo.nombre = tarjeta.querySelector('.nombre').innerHTML;
         filosofo.imagen = tarjeta.querySelector('.photo').src;
+
+        // Extraer información del país
         filosofo.pais = {};
-        // Completar funció
-        
-        let habilidades = tarjeta.querySelectorAll('.skill');
-        for (let habilidad of habilidades){
-            let habilidadParaGuardar = {};
-            // Completar funció
+        let filaPais = tarjeta.querySelector('.info-row span');
+        if (filaPais) {
+            filosofo.pais.nombre = filaPais.textContent.trim();
         }
+        let bandera = tarjeta.querySelector('.info-row img');
+        if (bandera) {
+            filosofo.pais.bandera = bandera.src;
+        }
+
+        // Extraer información de corriente y arma
+        let filaCorriente = tarjeta.querySelector('.info-row:nth-of-type(2) span');
+        filosofo.corriente = filaCorriente ? filaCorriente.textContent.replace('Corriente: ', '').trim() : '';
+
+        let filaArma = tarjeta.querySelector('.info-row:nth-of-type(3) span');
+        filosofo.arma = filaArma ? filaArma.textContent.replace('Arma: ', '').trim() : '';
+
+        // Extraer habilidades
+        filosofo.habilidades = [];
+        let habilidades = tarjeta.querySelectorAll('.skill');
+        for (let habilidad of habilidades) {
+            let habilidadParaGuardar = {};
+            habilidadParaGuardar.habilidad = habilidad.querySelector('span').textContent.trim();
+            let nivel = habilidad.querySelector('.level').style.width;
+            habilidadParaGuardar.nivel = parseInt(nivel) / 25; // Convertir porcentaje a escala 0-4
+            filosofo.habilidades.push(habilidadParaGuardar);
+        }
+
         filosofosParseados.push(filosofo);
     }
     return filosofosParseados;
 }
 
-function guardarTarjetas(){
+function guardarTarjetas() {
     let tarjetas = Array.from(document.querySelectorAll('.card'));
-    localStorage.setItem('tarjetas',JSON.stringify(parsearTarjetas(tarjetas)));
+    let tarjetasParseadas = parsearTarjetas(tarjetas);
+    localStorage.setItem('tarjetas', JSON.stringify(tarjetasParseadas));
+    alert('Tarjetas guardadas correctamente.');
 }
 
-
 function cargarTarjetas() {
+    // Leer las tarjetas guardadas en el localStorage
+    let tarjetasGuardadas = localStorage.getItem('tarjetas');
+    if (!tarjetasGuardadas) {
+        alert('No hay tarjetas guardadas.');
+        return;
+    }
+
+    // Parsear las tarjetas guardadas y crear nuevas tarjetas en el DOM
+    let filosofosGuardados = JSON.parse(tarjetasGuardadas);
+    let contenedor = document.querySelector('.cards-container');
+    contenedor.innerHTML = ""; // Vaciar el contenedor actual
+    crearTarjetas(filosofosGuardados);
+
+    alert('Tarjetas cargadas correctamente.');
 }
 
 const filosofos = [
