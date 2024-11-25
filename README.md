@@ -1,1 +1,1 @@
-https://gabrielleon31.github.io/liga-de-filosofos/
+Link pages: https://gabrielleon31.github.io/liga-de-filosofos/
