@@ -2,10 +2,20 @@ window.onload = () => {
     // Crear tarjetas al cargar la página
     crearTarjetas(filosofos);
 
-    // Asociar evento al formulario de creación
+    // Asociar eventos al formulario de creación
     let botonCrearTarjeta = document.querySelector('.create-card-form .create-btn');
     if (botonCrearTarjeta) {
         botonCrearTarjeta.addEventListener('click', crearNuevaTarjeta);
+    }
+
+    // Asociar eventos a los botones de ordenación
+    let botonOrdenAZ = document.querySelector('.sort-az');
+    let botonOrdenZA = document.querySelector('.sort-za');    
+    if (botonOrdenAZ) {
+        botonOrdenAZ.addEventListener('click', ordenarNombreAZ);
+    }
+    if (botonOrdenZA) {
+        botonOrdenZA.addEventListener('click', ordenarNombreZA);
     }
 };
 
@@ -123,22 +133,35 @@ function eliminarTarjeta(event) {
 }
 
 function ordenarNombreAZ() {
-    let tarjetas = Array.from(document.querySelectorAll('.card'));
-    let tarjetasOrdenadas = tarjetas.sort((tarjetaA, tarjetaB) => {
-        let nombre1 = tarjetaA.querySelector('h3').innerHTML;
-        let nombre2 = tarjetaB.querySelector('h3').innerHTML;
+    console.log("Ordenando A->Z");
+    let contenedor = document.querySelector('.cards-container');
+    if (!contenedor) return;
+
+    let tarjetas = Array.from(contenedor.querySelectorAll('.card'));
+    tarjetas.sort((tarjetaA, tarjetaB) => {
+        let nombre1 = tarjetaA.querySelector('h3').textContent.toLowerCase();
+        let nombre2 = tarjetaB.querySelector('h3').textContent.toLowerCase();
         return nombre1.localeCompare(nombre2);
     });
 
-    // Eliminar totes les targetes de l'array 'tarjeta'
-    // Completar codi
-
-    // Afegir 'tarjetasOrdenadas' al contenidor de cards
-    let contenedor = document.querySelector('.cards-container');
-    // Completar codi
+    contenedor.innerHTML = "";
+    tarjetas.forEach(tarjeta => contenedor.appendChild(tarjeta));
 }
 
 function ordenarNombreZA() {
+    console.log("Ordenando Z->A");
+    let contenedor = document.querySelector('.cards-container');
+    if (!contenedor) return;
+
+    let tarjetas = Array.from(contenedor.querySelectorAll('.card'));
+    tarjetas.sort((tarjetaA, tarjetaB) => {
+        let nombre1 = tarjetaA.querySelector('h3').textContent.toLowerCase();
+        let nombre2 = tarjetaB.querySelector('h3').textContent.toLowerCase();
+        return nombre2.localeCompare(nombre1);
+    });
+
+    contenedor.innerHTML = "";
+    tarjetas.forEach(tarjeta => contenedor.appendChild(tarjeta));
 }
 
 function crearNuevaTarjeta(event) {
