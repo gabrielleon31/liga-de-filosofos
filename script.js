@@ -23,6 +23,13 @@ function crearTarjetas(filosofos) {
         let tarjeta = document.createElement('div');
         tarjeta.classList.add('card');
 
+        // Crear botón para eliminar tarjeta
+        let botonEliminar = document.createElement('div');
+        botonEliminar.innerHTML = '&#x2716;'; // Carácter de aspa
+        botonEliminar.classList.add('botonEliminar');
+        botonEliminar.addEventListener('click', eliminarTarjeta); // Asociar evento
+        tarjeta.append(botonEliminar); // Añadir el botón a la tarjeta
+
         // Crear imagen del filósofo
         let imagen = document.createElement('img');
         imagen.src = filosofo.imagen;
@@ -107,7 +114,12 @@ function crearTarjetas(filosofos) {
     });
 }
 
-function eliminarTarjeta() {
+function eliminarTarjeta(event) {
+    // Obtener la tarjeta (elemento padre del botón)
+    let tarjeta = event.target.parentElement;
+
+    // Eliminar la tarjeta del DOM
+    tarjeta.remove();
 }
 
 function ordenarNombreAZ() {
