@@ -54,13 +54,17 @@ function crearTarjetas(filosofos) {
         // Añadir información de la corriente filosófica
         let filaCorriente = document.createElement('div');
         filaCorriente.classList.add('info-row');
-        filaCorriente.innerHTML = `<span>Corriente: </span><span>${filosofo.corriente}</span>`;
+        filaCorriente.innerHTML = `
+            <span>Corriente: ${filosofo.corriente}</span>
+        `;
         info.append(filaCorriente);
 
         // Añadir información del arma
         let filaArma = document.createElement('div');
         filaArma.classList.add('info-row');
-        filaArma.innerHTML = `<span>Arma: </span><span>${filosofo.arma}</span>`;
+        filaArma.innerHTML = `
+            <span>Arma: ${filosofo.arma}</span>
+        `;
         info.append(filaArma);
 
         // Crear contenedor de habilidades
