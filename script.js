@@ -2,8 +2,8 @@ window.onload = () => {
     // Crear tarjetas al cargar la página
     crearTarjetas(filosofos);
 
-    // Crear handlers para los botones de control
-    let botonCrearTarjeta = document.querySelector('.create-btn');
+    // Asociar evento al formulario de creación
+    let botonCrearTarjeta = document.querySelector('.create-card-form .create-btn');
     if (botonCrearTarjeta) {
         botonCrearTarjeta.addEventListener('click', crearNuevaTarjeta);
     }
@@ -142,15 +142,52 @@ function ordenarNombreZA() {
 }
 
 function crearNuevaTarjeta(event) {
-    event.preventDefault();
-    let nuevoFilosofo = {};
-    nuevoFilosofo.nombre = document.querySelector('.create-card-form .nombre').value;
-    nuevoFilosofo.imagen = document.querySelector('.create-card-form .foto').value;
-    nuevoFilosofo.pais = {};
-    nuevoFilosofo.pais.nombre = document.querySelector('.create-card-form .pais').value;
-    // Completar la función
+    event.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
-    // crearTarjetas(nuevoFilosofo);
+    // Crear un objeto con la información del formulario
+    let nuevoFilosofo = {
+        nombre: document.querySelector('.create-card-form .nombre').value,
+        imagen: document.querySelector('.create-card-form .foto').value,
+        pais: {
+            nombre: document.querySelector('.create-card-form .pais').value,
+            bandera: document.querySelector('.create-card-form .bandera').value
+        },
+        corriente: document.querySelector('.create-card-form .corriente').value,
+        arma: document.querySelector('.create-card-form .arma').value,
+        habilidades: [
+            {
+                habilidad: "Sabiduría",
+                nivel: parseInt(document.querySelector('.create-card-form .sabiduria').value) || 0
+            },
+            {
+                habilidad: "Oratoria",
+                nivel: parseInt(document.querySelector('.create-card-form .oratoria').value) || 0
+            },
+            {
+                habilidad: "Lógica",
+                nivel: parseInt(document.querySelector('.create-card-form .logica').value) || 0
+            },
+            {
+                habilidad: "Innovación",
+                nivel: parseInt(document.querySelector('.create-card-form .innovacion').value) || 0
+            }
+        ]
+    };
+
+    // Validar campos obligatorios
+    if (!nuevoFilosofo.nombre || !nuevoFilosofo.imagen || !nuevoFilosofo.pais.nombre || !nuevoFilosofo.pais.bandera) {
+        alert("Por favor, completa todos los campos obligatorios.");
+        return;
+    }
+
+    // Añadir el nuevo filósofo al array global
+    filosofos.push(nuevoFilosofo);
+
+    // Renderizar solo la nueva tarjeta
+    crearTarjetas([nuevoFilosofo]);
+
+    // Limpiar los campos del formulario
+    document.querySelector('.create-card-form form').reset();
 }
 
 function parsearTarjetas(tarjetas){
